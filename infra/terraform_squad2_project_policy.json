@@ -1,0 +1,28 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "TerraformCoreResources",
+      "Effect": "Allow",
+      "Action": [
+        "s3:*",
+        "dynamodb:*",
+        "ec2:*",
+        "iam:*",
+        "lambda:*",
+        "logs:*",
+        "apigateway:*",
+        "events:*",
+        "ecr:*",
+        "ecs:*",
+        "codebuild:*",
+        "codepipeline:*",
+        "secretsmanager:*",
+        "cloudformation:*",
+        "ce:GetCostAndUsage",
+        "budgets:ViewBudget"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
