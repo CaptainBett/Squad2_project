@@ -8,16 +8,16 @@ resource "aws_kinesis_stream" "events_stream" {
   name             = "${local.name_prefix}-stream"
   shard_count      = 1
   retention_period = 24
-  tags = { Project = var.project_prefix }
+  tags             = { Project = var.project_prefix }
 }
 
 
 # DynamoDB Table for user events
 resource "aws_dynamodb_table" "user_events" {
-  name           = "${local.name_prefix}-dynamo"
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "user_id"
-  range_key      = "event_time"
+  name         = "${local.name_prefix}-dynamo"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "user_id"
+  range_key    = "event_time"
   attribute {
     name = "user_id"
     type = "S"
@@ -29,7 +29,7 @@ resource "aws_dynamodb_table" "user_events" {
 
   stream_enabled   = true
   stream_view_type = "NEW_IMAGE"
-  
+
   tags = {
     Project = var.project_prefix
   }
@@ -70,19 +70,19 @@ data "aws_iam_policy_document" "lambda_policy" {
     ]
   }
 
-dynamic "statement" {
-  for_each = var.create_kinesis ? [1] : []
-  content {
-    sid = "KinesisAccess"
-    actions = [
-      "kinesis:PutRecord",
-      "kinesis:PutRecords",
-      "kinesis:DescribeStream",
-      "kinesis:ListShards"
-    ]
-    resources = [aws_kinesis_stream.events_stream[0].arn]
+  dynamic "statement" {
+    for_each = var.create_kinesis ? [1] : []
+    content {
+      sid = "KinesisAccess"
+      actions = [
+        "kinesis:PutRecord",
+        "kinesis:PutRecords",
+        "kinesis:DescribeStream",
+        "kinesis:ListShards"
+      ]
+      resources = [aws_kinesis_stream.events_stream[0].arn]
+    }
   }
-}
 
 
   statement {
@@ -104,19 +104,19 @@ resource "aws_iam_role_policy" "lambda_role_policy" {
 
 # Lambda function (code must be provided as a zip file path - see instructions)
 resource "aws_lambda_function" "event_collector" {
-  filename         = "${path.module}/event_collector.zip" # create zip at this path before terraform apply
-  function_name    = "${var.project_prefix}-event-collector"
-  role             = aws_iam_role.lambda_role.arn
-  handler          = "lambda_function.lambda_handler"
-  runtime          = "python3.9"
-  timeout          = var.lambda_timeout
-  publish          = true
+  filename      = "${path.module}/event_collector.zip" # create zip at this path before terraform apply
+  function_name = "${var.project_prefix}-event-collector"
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "lambda_function.lambda_handler"
+  runtime       = "python3.9"
+  timeout       = var.lambda_timeout
+  publish       = true
 
   environment {
     variables = {
-      DDB_TABLE = aws_dynamodb_table.user_events.name
+      DDB_TABLE      = aws_dynamodb_table.user_events.name
       KINESIS_STREAM = var.create_kinesis ? aws_kinesis_stream.events_stream[0].name : ""
-      REGION = var.aws_region
+      REGION         = var.aws_region
     }
   }
 
@@ -145,11 +145,11 @@ resource "aws_apigatewayv2_api" "http_api" {
 
 # Integration: Lambda (need the special apigateway ARN format)
 resource "aws_apigatewayv2_integration" "lambda_integration" {
-  api_id           = aws_apigatewayv2_api.http_api.id
-  integration_type = "AWS_PROXY"
-  integration_uri  = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/${aws_lambda_function.event_collector.arn}/invocations"
+  api_id                 = aws_apigatewayv2_api.http_api.id
+  integration_type       = "AWS_PROXY"
+  integration_uri        = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/${aws_lambda_function.event_collector.arn}/invocations"
   payload_format_version = "2.0"
-  timeout_milliseconds = 30000
+  timeout_milliseconds   = 30000
 }
 
 # Route and stage

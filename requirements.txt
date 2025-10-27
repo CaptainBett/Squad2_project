@@ -1,0 +1,15 @@
+boto3==1.40.59
+botocore==1.40.59
+jmespath==1.0.1
+python-dateutil==2.9.0.post0
+s3transfer==0.14.0
+six==1.17.0
+urllib3==2.5.0
+aws-glue-libs @ git+https://github.com/awslabs/aws-glue-libs.git@9d8293962e6ffc607e5dc328e246f40b24010fa8
+boto3==1.40.59
+botocore==1.40.59
+jmespath==1.0.1
+python-dateutil==2.9.0.post0
+s3transfer==0.14.0
+six==1.17.0
+urllib3==2.5.0

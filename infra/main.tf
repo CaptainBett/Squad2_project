@@ -47,3 +47,4 @@ module "dynamodb_to_s3" {
     Project = var.project_prefix
   }
 }
+

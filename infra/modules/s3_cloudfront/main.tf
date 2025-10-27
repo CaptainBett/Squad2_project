@@ -3,7 +3,7 @@ terraform {
     aws = {
       source = "hashicorp/aws"
       # This line tells the module to expect an aliased provider
-      configuration_aliases = [ aws.us_east_1 ]
+      configuration_aliases = [aws.us_east_1]
     }
   }
 }
@@ -79,10 +79,10 @@ resource "aws_s3_bucket_policy" "site_policy" {
 
 # Optional ACM cert in us-east-1 for custom domain; only created if enable_acm == true and domain_name != ""
 resource "aws_acm_certificate" "cert" {
-  count                    = var.enable_acm && length(var.domain_name) > 0 ? 1 : 0
-  provider                 = aws.us_east_1
-  domain_name              = var.domain_name
-  validation_method        = "DNS"
+  count             = var.enable_acm && length(var.domain_name) > 0 ? 1 : 0
+  provider          = aws.us_east_1
+  domain_name       = var.domain_name
+  validation_method = "DNS"
   lifecycle {
     create_before_destroy = true
   }
@@ -91,7 +91,7 @@ resource "aws_acm_certificate" "cert" {
 
 # CloudFront distribution
 resource "aws_cloudfront_distribution" "cdn" {
-  enabled = true
+  enabled             = true
   default_root_object = "index.html"
 
   origin {
@@ -103,9 +103,9 @@ resource "aws_cloudfront_distribution" "cdn" {
   }
 
   default_cache_behavior {
-    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "s3-${aws_s3_bucket.site_bucket.id}"
+    allowed_methods        = ["GET", "HEAD", "OPTIONS"]
+    cached_methods         = ["GET", "HEAD"]
+    target_origin_id       = "s3-${aws_s3_bucket.site_bucket.id}"
     viewer_protocol_policy = "redirect-to-https"
     forwarded_values {
       query_string = false
@@ -125,7 +125,7 @@ resource "aws_cloudfront_distribution" "cdn" {
   }
 
   # viewer certificate: use ACM cert if created, otherwise use default CloudFront certificate
-viewer_certificate {
+  viewer_certificate {
     # Set the default certificate to true ONLY if enable_acm is false or domain_name is empty
     cloudfront_default_certificate = var.enable_acm && length(var.domain_name) > 0 ? false : true
 

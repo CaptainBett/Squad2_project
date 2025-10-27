@@ -12,7 +12,7 @@ data "aws_iam_policy_document" "ci_assume" {
 resource "aws_iam_role" "ci_role" {
   name               = "${var.project_prefix}-ci-role"
   assume_role_policy = data.aws_iam_policy_document.ci_assume.json
-  tags = { Name = "${var.project_prefix}-ci-role" }
+  tags               = { Name = "${var.project_prefix}-ci-role" }
 }
 
 # (Learning/demo) Attach AdministratorAccess for CI role — tighten later
@@ -35,7 +35,7 @@ data "aws_iam_policy_document" "lambda_assume" {
 resource "aws_iam_role" "lambda_execution" {
   name               = "${var.project_prefix}-lambda-exec"
   assume_role_policy = data.aws_iam_policy_document.lambda_assume.json
-  tags = { Name = "${var.project_prefix}-lambda-exec" }
+  tags               = { Name = "${var.project_prefix}-lambda-exec" }
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_basic_exec" {

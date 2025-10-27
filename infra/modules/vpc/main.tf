@@ -13,7 +13,7 @@ resource "aws_vpc" "this" {
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.this.id
-  tags = { Name = "${var.project_prefix}-igw" }
+  tags   = { Name = "${var.project_prefix}-igw" }
 }
 
 # Public subnets (count)
@@ -23,7 +23,7 @@ resource "aws_subnet" "public" {
   cidr_block              = var.public_subnet_cidrs[count.index]
   map_public_ip_on_launch = true
   availability_zone       = data.aws_availability_zones.available.names[count.index]
-  tags = { Name = "${var.project_prefix}-public-${count.index + 1}" }
+  tags                    = { Name = "${var.project_prefix}-public-${count.index + 1}" }
 }
 
 # Private subnets (count)
@@ -33,7 +33,7 @@ resource "aws_subnet" "private" {
   cidr_block              = var.private_subnet_cidrs[count.index]
   map_public_ip_on_launch = false
   availability_zone       = data.aws_availability_zones.available.names[count.index]
-  tags = { Name = "${var.project_prefix}-private-${count.index + 1}" }
+  tags                    = { Name = "${var.project_prefix}-private-${count.index + 1}" }
 }
 
 # Public route table + route to IGW
@@ -47,8 +47,8 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route_table_association" "public_assocs" {
-  count = length(aws_subnet.public)
-  subnet_id = aws_subnet.public[count.index].id
+  count          = length(aws_subnet.public)
+  subnet_id      = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public.id
 }
 
@@ -81,7 +81,7 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "private_assocs" {
-  count = length(aws_subnet.private)
-  subnet_id = aws_subnet.private[count.index].id
+  count          = length(aws_subnet.private)
+  subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private.id
 }
