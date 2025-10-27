@@ -1,6 +1,6 @@
 provider "aws" {
   region  = "us-east-1"
-  profile = "terraform-admin"  
+  profile = "terraform-admin"
 }
 
 provider "aws" {

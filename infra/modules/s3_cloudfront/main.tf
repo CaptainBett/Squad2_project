@@ -11,8 +11,6 @@ terraform {
 # Create private S3 bucket for static website assets
 resource "aws_s3_bucket" "site_bucket" {
   bucket = "${var.project_prefix}-frontend-${random_id.bucket_suffix.hex}"
-  acl    = "private"
-
   tags = merge(
     {
       Name = "${var.project_prefix}-frontend"

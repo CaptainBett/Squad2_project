@@ -30,3 +30,13 @@ output "cloudfront_distribution_id" {
   description = "The ID of the CloudFront distribution."
   value       = module.s3_cloudfront.cloudfront_distribution_id
 }
+
+output "events_api_endpoint" {
+  value = module.event_collector.api_endpoint
+}
+
+output "events_ddb_table" {
+  value = module.event_collector.ddb_table
+}
+
+
