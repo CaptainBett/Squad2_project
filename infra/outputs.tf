@@ -39,4 +39,7 @@ output "events_ddb_table" {
   value = module.event_collector.ddb_table
 }
 
-
+output "glue_etl_glue_job_name" {
+  description = "The name of the AWS Glue ETL job"
+  value       = module.glue_etl.glue_job_name
+}

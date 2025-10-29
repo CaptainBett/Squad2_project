@@ -48,3 +48,13 @@ module "dynamodb_to_s3" {
   }
 }
 
+module "glue_etl" {
+  source           = "./modules/glue_etl"
+  project_prefix   = var.project_prefix
+  aws_region       = var.aws_region
+  datalake_bucket  = module.dynamodb_to_s3.datalake_bucket # or your bucket name
+  events_prefix    = "events/"
+  output_prefix    = "personalize/input/"
+  glue_worker_type = "G.1X"
+  glue_workers     = 2
+}
